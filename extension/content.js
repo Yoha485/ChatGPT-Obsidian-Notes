@@ -10,38 +10,37 @@ const obsidianIconHtml = `
 
 async function createObsidianNote(obsidianButton) {
     let content = '';
+    let noteName = '';
 
-    console.log('Creating Obsidian note', obsidianButton);
-
-    // Find the copy button and click it to copy the content to the clipboard
     const copyButton =
         obsidianButton.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(
             `[data-testid="${COPY_BUTTON_DATA_TEST_ID}"]`
         );
+
     if (copyButton) {
-        console.log('Copying content to clipboard:', copyButton);
+        noteName = prompt('Enter the note name:');
+
+        if (noteName === null || noteName === '') {
+            throw new Error('Note name not provided');
+        }
+
         copyButton.click();
 
-        // Wait for the clipboard content to be available
         const clipboardContent = await navigator.clipboard.readText();
         content = clipboardContent;
     } else {
-        throw new Error('Copy button not found');
+        throw new Error('Copy button for message not found');
     }
 
     if (!content) {
         throw new Error('No content copied to clipboard');
     }
 
-    console.log('Creating Obsidian note with content:', content);
+    if (!noteName.endsWith('.md')) {
+        noteName += '.md';
+    }
 
     try {
-        let noteName = prompt('Enter the note name:', 'obs-test.md');
-
-        if (!noteName.endsWith('.md')) {
-            noteName += '.md';
-        }
-
         const response = await fetch('http://localhost:5050/create_note', {
             method: 'POST',
             headers: {
@@ -61,21 +60,21 @@ async function createObsidianNote(obsidianButton) {
         console.log('Note created successfully:', data);
 
         // Change the color of the SVG inside the obsidian button
-        const svgElement = obsidianButton.querySelector('svg');
+        const svgElement = obsidianButton.parentElement.parentElement.querySelector('svg');
         if (svgElement) {
-            svgElement.style.fill = '#9065ea';
+            // For every path element in the SVG, change the stroke color
+            svgElement.querySelectorAll('path').forEach((pathElement) => {
+                pathElement.setAttribute('stroke', '#9065ea');
+            });
         }
     } catch (error) {
         console.error('Error creating note:', error);
     }
 }
 
-// Function to add obsidian button to assistant messages
-function addButtonToMessages() {
-    // Select all copy buttons to insert the new button after them
+function addObsidianButtonToMessages() {
+    // Select all copy buttons to insert the new button right after them
     const copyButtons = document.querySelectorAll(`[data-testid="${COPY_BUTTON_DATA_TEST_ID}"]`);
-
-    console.log('Adding Obsidian buttons to messages:', copyButtons);
 
     copyButtons.forEach((copyButton) => {
         // Check if the new button has already been added
@@ -83,7 +82,7 @@ function addButtonToMessages() {
             return;
         }
 
-        // Create the new button
+        // Create the new button following the same structure as other buttons
         const obsidianButton = document.createElement('button');
         const obsidianButtonClass = 'rounded-lg text-token-text-secondary hover:bg-token-main-surface-secondary';
         const obsidianButtonDataTestId = 'create-obsidian-note';
@@ -102,28 +101,19 @@ function addButtonToMessages() {
         obsidianButton.appendChild(childSpan);
         parentSpan.appendChild(obsidianButton);
 
-        console.log('Parent span:', parentSpan);
-
         const insertTo = copyButton.parentElement.parentElement;
         const atPosition = 2;
         insertTo.insertBefore(parentSpan, insertTo.childNodes[atPosition]);
 
         obsidianButton.addEventListener('click', (event) => {
-            console.log('Obsidian button clicked!');
-
             createObsidianNote(event.target);
         });
-
-        console.log('Obsidian button added to message:', obsidianButton);
     });
 }
 
 window.onload = () => {
-    console.log('Obsidian content script loaded');
+    addObsidianButtonToMessages();
 
-    addButtonToMessages();
-
-    // Optionally, observe the page for new messages and dynamically add the button
-    const observer = new MutationObserver(addButtonToMessages);
+    const observer = new MutationObserver(addObsidianButtonToMessages);
     observer.observe(document.body, { childList: true, subtree: true });
 };
