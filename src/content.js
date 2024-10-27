@@ -1,6 +1,6 @@
 import { getNthParent } from './utils/dom-utils.js';
 import { saveToObsidian } from './utils/obsidian-note-creator.js';
-import { copyButtonTestId, obsidianIconHtml } from './constants/index.js';
+import { copyButtonTestId, obsidianIconHtml, obsidianIconHtmlDark } from './constants/index.js';
 
 async function onClickObsidianButton(obsidianButton) {
     let content = '';
@@ -48,6 +48,8 @@ async function onClickObsidianButton(obsidianButton) {
 }
 
 function addObsidianButtonToMessages() {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+
     // Select all copy buttons to insert the new button right after them
     const copyButtons = document.querySelectorAll(`[data-testid="${copyButtonTestId}"]`);
 
@@ -71,7 +73,7 @@ function addObsidianButtonToMessages() {
         const childSpan = document.createElement('span');
         const childSpanClass = 'flex h-[30px] w-[30px] items-center justify-center';
         childSpan.className = childSpanClass;
-        childSpan.innerHTML = obsidianIconHtml;
+        childSpan.innerHTML = isDarkMode ? obsidianIconHtmlDark : obsidianIconHtml;
 
         obsidianButton.appendChild(childSpan);
         parentSpan.appendChild(obsidianButton);
