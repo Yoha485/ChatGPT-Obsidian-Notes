@@ -9,8 +9,8 @@
     "author": "Anton Morozov",
     "license": "MIT",
     "scripts": {
-        "build": "npx webpack --mode=production && npm run copy-extension-essentials",
-        "copy-extension-essentials": "cp -r ./src/manifest.json ./dist/manifest.json && cp -r ./src/popup.html ./dist/popup.html"
+        "build": "rm -rf ./dist && npx webpack --mode=production && npm run copy-extension-essentials",
+        "copy-extension-essentials": "cp -r ./src/manifest.json ./dist/unpacked/manifest.json"
     },
     "devDependencies": {
         "webpack": "^5.95.0",

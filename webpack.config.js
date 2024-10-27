@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
         entry: './src/content.js',
         output: {
             filename: 'content.js',
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'dist/unpacked'),
         },
         mode: argv.mode || 'development',
         optimization: {
