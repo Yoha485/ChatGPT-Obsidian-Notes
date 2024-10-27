@@ -31,4 +31,4 @@ sed -i '' "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" src/manifest.json
 npm run build
 
 # zip the dist folder
-zip -r dist/obsidian-chatgpt-notes-$VERSION.zip dist
+zip -r dist/obsidian-chatgpt-notes-$VERSION.zip dist/unpacked
