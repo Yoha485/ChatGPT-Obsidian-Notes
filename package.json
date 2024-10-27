@@ -1,0 +1,19 @@
+{
+    "name": "obsidian-chatgpt-notes",
+    "version": "1.0.0",
+    "description": "Adds a button near every ChatGPT assistant message that will create a new note with asistant's text inside.",
+    "main": "/src/content.js",
+    "keywords": [
+        "obsidian"
+    ],
+    "author": "Anton Morozov",
+    "license": "MIT",
+    "scripts": {
+        "build": "npx webpack --mode=production && npm run copy-extension-essentials",
+        "copy-extension-essentials": "cp -r ./src/manifest.json ./dist/manifest.json && cp -r ./src/popup.html ./dist/popup.html"
+    },
+    "devDependencies": {
+        "webpack": "^5.95.0",
+        "webpack-cli": "^5.1.4"
+    }
+}

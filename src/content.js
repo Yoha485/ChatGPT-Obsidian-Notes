@@ -6,7 +6,7 @@ async function onClickObsidianButton(obsidianButton) {
     let content = '';
     let noteName = '';
 
-    const relativeCopyButton = getNthParent(obsidianButton)?.querySelector(`[data-testid="${copyButtonTestId}"]`);
+    const relativeCopyButton = getNthParent(obsidianButton, 5)?.querySelector(`[data-testid="${copyButtonTestId}"]`);
 
     if (relativeCopyButton) {
         noteName = prompt('Enter the note name:');

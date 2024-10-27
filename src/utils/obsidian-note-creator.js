@@ -1,29 +1,9 @@
 import { sanitizeFileName } from './string-utils.js';
 
 let generalSettings = {
-	vaults: [],
-	betaFeatures: false,
-	legacyMode: false,
-	silentOpen: false,
-	highlighterEnabled: true,
-	alwaysShowHighlights: false,
-	highlightBehavior: 'replace-content',
-	showMoreActionsButton: false,
-	openaiApiKey: '',
-	anthropicApiKey: '',
-	interpreterModel: 'gpt-4o-mini',
-	models: [
-		{ id: 'gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI', baseUrl: 'https://api.openai.com/v1/chat/completions', enabled: true },
-		{ id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', baseUrl: 'https://api.openai.com/v1/chat/completions', enabled: true },
-		{ id: 'gpt-o1-mini', name: 'GPT-o1 Mini', provider: 'OpenAI', baseUrl: 'https://api.openai.com/v1/chat/completions', enabled: true },
-		{ id: 'claude-3-5-sonnet-20240620', name: 'Claude 3.5 Sonnet', provider: 'Anthropic', baseUrl: 'https://api.anthropic.com/v1/messages', enabled: true },
-		{ id: 'claude-3-haiku-20240307', name: 'Claude 3 Haiku', provider: 'Anthropic', baseUrl: 'https://api.anthropic.com/v1/messages', enabled: true },
-		{ id: 'claude-3-opus-20240229', name: 'Claude 3 Opus', provider: 'Anthropic', baseUrl: 'https://api.anthropic.com/v1/messages', enabled: true }
-	],
-	interpreterEnabled: false,
-	interpreterAutoRun: false,
-	defaultPromptContext: '{{fullHtml|strip_tags:("script,h1,h2,h3,h4,h5,h6,meta,a,ol,ul,li,p,em,strong,i,b,img,video,audio,math,tablecite,strong,td,th,tr,caption,u")|strip_attr:("alt,src,href,id,content,property,name,datetime,title")}}',
-	propertyTypes: []
+    vaults: [],
+    legacyMode: false,
+    silentOpen: false,
 };
 
 /**
@@ -80,11 +60,6 @@ export async function saveToObsidian(fileContent, noteName, path, vault) {
     }
 
     function openObsidianUrl(url) {
-        browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-            const currentTab = tabs[0];
-            if (currentTab && currentTab.id) {
-                browser.tabs.update(currentTab.id, { url: url });
-            }
-        });
+        window.open(url, '_blank');
     }
 }
