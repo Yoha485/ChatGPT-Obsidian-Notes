@@ -1,10 +1,12 @@
 import { getNthParent } from './utils/dom-utils.js';
 import { saveToObsidian } from './utils/obsidian-note-creator.js';
 import { copyButtonTestId, obsidianIconHtml, obsidianIconHtmlDark } from './constants/index.js';
+import { extractMarkdownSubset } from './utils/string-utils.js';
 
 async function onClickObsidianButton(obsidianButton) {
-    let content = '';
+    let messageContent = '';
     let noteName = '';
+    let selectionText = window.getSelection().toString();
 
     const relativeCopyButton = getNthParent(obsidianButton, 5)?.querySelector(`[data-testid="${copyButtonTestId}"]`);
 
@@ -18,12 +20,12 @@ async function onClickObsidianButton(obsidianButton) {
         relativeCopyButton.click();
 
         const clipboardContent = await navigator.clipboard.readText();
-        content = clipboardContent;
+        messageContent = clipboardContent;
     } else {
         throw new Error('Copy button for message not found');
     }
 
-    if (!content) {
+    if (!messageContent) {
         throw new Error('No content copied to clipboard');
     }
 
@@ -31,8 +33,12 @@ async function onClickObsidianButton(obsidianButton) {
         noteName += '.md';
     }
 
+    if (selectionText) {
+        messageContent = extractMarkdownSubset(messageContent, selectionText);
+    }
+
     try {
-        saveToObsidian(content, noteName, '');
+        saveToObsidian(messageContent, noteName, '');
 
         // Change the color of the SVG inside the obsidian button
         const svgElement = obsidianButton.parentElement.parentElement.querySelector('svg');
