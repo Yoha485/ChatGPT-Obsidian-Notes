@@ -1,9 +1,12 @@
 {
     "manifest_version": 3,
     "name": "Obsidian ChatGPT Notes",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Adds a button near every ChatGPT assistant message that will create a new note with asistant's text inside.",
-    "permissions": [],
+    "permissions": ["storage"],
+    "action": {
+        "default_popup": "popup.html"
+    },
     "host_permissions": ["https://chatgpt.com/*"],
     "content_scripts": [
         {
