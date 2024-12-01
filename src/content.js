@@ -53,7 +53,7 @@ async function onClickObsidianButton(obsidianButton) {
     }
 }
 
-function addObsidianButtonToMessages() {
+function addObsidianButtonToMessages(options) {
     const isDarkMode = document.documentElement.classList.contains('dark');
 
     // Select all copy buttons to insert the new button right after them
@@ -61,8 +61,12 @@ function addObsidianButtonToMessages() {
 
     copyButtons.forEach((copyButton) => {
         // Check if the new button has already been added
-        if (copyButton.parentElement.parentElement.querySelector('[data-testid="create-obsidian-note"]')) {
-            return;
+        if (getNthParent(copyButton, 2).querySelector('[data-testid="create-obsidian-note"]')) {
+            if (options?.force) {
+                getNthParent(copyButton, 2).querySelector('[data-testid="create-obsidian-note"]').remove();
+            } else {
+                return;
+            }
         }
 
         // Create the new button following the same structure as other buttons
@@ -99,4 +103,12 @@ window.onload = () => {
 
     const observer = new MutationObserver(addObsidianButtonToMessages);
     observer.observe(document.body, { childList: true, subtree: true });
+
+    const themeChangeObserver = new MutationObserver(() => {
+        addObsidianButtonToMessages({ force: true });
+    });
+    themeChangeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+    });
 };
